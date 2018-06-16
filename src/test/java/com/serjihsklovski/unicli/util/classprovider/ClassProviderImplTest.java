@@ -1,4 +1,4 @@
-package com.serjihsklovski.unicli;
+package com.serjihsklovski.unicli.util.classprovider;
 
 import org.junit.Test;
 
@@ -20,25 +20,25 @@ public class ClassProviderImplTest {
     @Test
     public void fetchAllClassesByRoots() {
         Set<Class> classSet1 = new HashSet<>(Arrays.asList(
-                com.serjihsklovski.unicli.test.classprovider.TestAnnotation.class,
-                com.serjihsklovski.unicli.test.classprovider.TestClass.class,
-                com.serjihsklovski.unicli.test.classprovider.TestEnum.class,
-                com.serjihsklovski.unicli.test.classprovider.TestInterface.class,
-                com.serjihsklovski.unicli.test.classprovider.subpackage.TestAnnotation.class,
-                com.serjihsklovski.unicli.test.classprovider.subpackage.TestClass.class,
-                com.serjihsklovski.unicli.test.classprovider.subpackage.TestEnum.class,
-                com.serjihsklovski.unicli.test.classprovider.subpackage.TestInterface.class
+                com.serjihsklovski.unicli.util.classprovider.test.classprovider.TestAnnotation.class,
+                com.serjihsklovski.unicli.util.classprovider.test.classprovider.TestClass.class,
+                com.serjihsklovski.unicli.util.classprovider.test.classprovider.TestEnum.class,
+                com.serjihsklovski.unicli.util.classprovider.test.classprovider.TestInterface.class,
+                com.serjihsklovski.unicli.util.classprovider.test.classprovider.subpackage.TestAnnotation.class,
+                com.serjihsklovski.unicli.util.classprovider.test.classprovider.subpackage.TestClass.class,
+                com.serjihsklovski.unicli.util.classprovider.test.classprovider.subpackage.TestEnum.class,
+                com.serjihsklovski.unicli.util.classprovider.test.classprovider.subpackage.TestInterface.class
         ));
-        String root1 = "com.serjihsklovski.unicli.test.classprovider";
+        String root1 = "com.serjihsklovski.unicli.util.classprovider.test.classprovider";
         testClassSet(classSet1, root1);
 
         Set<Class> classSet2 = new HashSet<>(Arrays.asList(
-                com.serjihsklovski.unicli.test.classprovider.subpackage.TestAnnotation.class,
-                com.serjihsklovski.unicli.test.classprovider.subpackage.TestClass.class,
-                com.serjihsklovski.unicli.test.classprovider.subpackage.TestEnum.class,
-                com.serjihsklovski.unicli.test.classprovider.subpackage.TestInterface.class
+                com.serjihsklovski.unicli.util.classprovider.test.classprovider.subpackage.TestAnnotation.class,
+                com.serjihsklovski.unicli.util.classprovider.test.classprovider.subpackage.TestClass.class,
+                com.serjihsklovski.unicli.util.classprovider.test.classprovider.subpackage.TestEnum.class,
+                com.serjihsklovski.unicli.util.classprovider.test.classprovider.subpackage.TestInterface.class
         ));
-        String root2 = "com.serjihsklovski.unicli.test.classprovider.subpackage";
+        String root2 = "com.serjihsklovski.unicli.util.classprovider.test.classprovider.subpackage";
         testClassSet(classSet2, root2);
     }
 

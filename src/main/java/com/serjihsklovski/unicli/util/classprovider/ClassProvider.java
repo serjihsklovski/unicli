@@ -1,4 +1,4 @@
-package com.serjihsklovski.unicli;
+package com.serjihsklovski.unicli.util.classprovider;
 
 import java.util.Set;
 

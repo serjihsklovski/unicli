@@ -1,5 +1,7 @@
 package com.serjihsklovski.unicli.util.classprovider.findresourcespolicy;
 
+import com.serjihsklovski.unicli.util.classprovider.JarSchemeUriExtractor;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;

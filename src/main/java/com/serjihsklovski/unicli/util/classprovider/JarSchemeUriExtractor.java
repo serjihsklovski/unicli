@@ -1,4 +1,4 @@
-package com.serjihsklovski.unicli.util.classprovider.findresourcespolicy;
+package com.serjihsklovski.unicli.util.classprovider;
 
 import java.net.URI;
 import java.util.regex.Matcher;
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * @see #getJarFileUri()
  * @see #getJarEntryName()
  */
-class JarSchemeUriExtractor {
+public class JarSchemeUriExtractor {
 
     private static final String GROUP_JAR_FILE_LOCATION = "jarFileLocation";
 
@@ -38,15 +38,15 @@ class JarSchemeUriExtractor {
         jarEntryName = matcher.group(GROUP_JAR_ENTRY_NAME);
     }
 
-    static JarSchemeUriExtractor extract(URI jarSchemeUri) {
+    public static JarSchemeUriExtractor extract(URI jarSchemeUri) {
         return new JarSchemeUriExtractor(jarSchemeUri);
     }
 
-    URI getJarFileUri() {
+    public URI getJarFileUri() {
         return jarFileUri;
     }
 
-    String getJarEntryName() {
+    public String getJarEntryName() {
         return jarEntryName;
     }
 

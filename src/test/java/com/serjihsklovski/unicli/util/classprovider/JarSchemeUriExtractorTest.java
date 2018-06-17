@@ -1,4 +1,4 @@
-package com.serjihsklovski.unicli.util.classprovider.findresourcespolicy;
+package com.serjihsklovski.unicli.util.classprovider;
 
 import org.junit.Test;
 

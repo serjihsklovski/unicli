@@ -7,6 +7,8 @@ import com.serjihsklovski.unicli.service.TaskService;
 import com.serjihsklovski.unicli.service.TaskServiceImpl;
 import com.serjihsklovski.unicli.service.UsageService;
 import com.serjihsklovski.unicli.service.UsageServiceImpl;
+import com.serjihsklovski.unicli.util.classprovider.ClassProvider;
+import com.serjihsklovski.unicli.util.classprovider.ClassProviderImpl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

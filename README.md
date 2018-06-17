@@ -19,7 +19,7 @@ allprojects {
 }
 
 dependencies {
-    compile 'com.github.serjihsklovski:unicli:0.1.0'
+    compile 'com.github.serjihsklovski:unicli:0.1.1'
 }
 
 // ...
@@ -97,7 +97,7 @@ allprojects {
 }
 
 dependencies {
-    compile 'com.github.serjihsklovski:unicli:0.1.0'
+    compile 'com.github.serjihsklovski:unicli:0.1.1'
 }
 ```
 

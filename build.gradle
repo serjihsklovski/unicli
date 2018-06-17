@@ -11,7 +11,7 @@ dependencies {
 }
 
 group = 'com.serjihsklovski.unicli'
-version = '0.1.0'
+version = '0.1.1'
 
 description = """
 Unicli is a frontend framework for building CLI applications in Java.

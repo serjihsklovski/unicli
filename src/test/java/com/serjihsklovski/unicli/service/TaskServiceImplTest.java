@@ -6,7 +6,13 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TaskServiceImplTest {
 
@@ -49,6 +55,45 @@ public class TaskServiceImplTest {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void getTaskByName_expectOk() {
+        TaskService taskService = initWithClassPool(com.serjihsklovski.unicli.service.cli.test.DemoTask.class);
+
+        Optional<Class> rootTaskClass = taskService.getTaskByName("demo-task");
+        assertTrue(rootTaskClass.isPresent());
+    }
+
+    @Test
+    public void getTaskByName_expectNotFound() {
+        TaskService taskService = initWithClassPool(com.serjihsklovski.unicli.service.cli.test.DemoTask.class);
+
+        Optional<Class> rootTaskClass = taskService.getTaskByName("nonexistent-task");
+        assertFalse(rootTaskClass.isPresent());
+    }
+
+    @Test
+    public void getRootTask_expectOk() {
+        TaskService taskService = initWithClassPool(
+                com.serjihsklovski.unicli.service.cli.test.DemoRootTask.class,
+                com.serjihsklovski.unicli.service.cli.test.DemoTask.class
+        );
+
+        Optional<Class> rootTaskClass = taskService.getRootTask();
+        assertTrue(rootTaskClass.isPresent());
+    }
+
+    @Test
+    public void getRootTask_expectNotFound() {
+        TaskService taskService = initWithClassPool(com.serjihsklovski.unicli.service.cli.test.DemoTask.class);
+
+        Optional<Class> rootTaskClass = taskService.getRootTask();
+        assertFalse(rootTaskClass.isPresent());
+    }
+
+    private TaskServiceImpl initWithClassPool(Class... classes) {
+        return new TaskServiceImpl(Stream.of(classes).collect(Collectors.toSet()));
     }
 
     private void testClassPool(Set<Class> classPool) {

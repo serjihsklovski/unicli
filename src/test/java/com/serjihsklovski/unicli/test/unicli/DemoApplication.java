@@ -3,7 +3,7 @@ package com.serjihsklovski.unicli.test.unicli;
 import com.serjihsklovski.unicli.annotation.Task;
 import com.serjihsklovski.unicli.annotation.Usage;
 
-@Task
+@Task(root = true)
 public class DemoApplication {
 
     public static final int EXPECTED_VALUE = 1;

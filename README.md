@@ -19,7 +19,7 @@ allprojects {
 }
 
 dependencies {
-    compile 'com.github.serjihsklovski:unicli:0.1.1'
+    compile 'com.github.serjihsklovski:unicli:0.2.0'
 }
 
 // ...
@@ -38,7 +38,7 @@ argument:
 $ java -jar your-app.jar your-task
 ```
 
-If the task is not specified, the nameless (or *root*) task will be performed.
+If the task is not specified, Unicli will try to invoke the *root task*.
 
 ### Creating a Unicli Application
 
@@ -51,7 +51,9 @@ demoapp
 |   ├── gradle-wrapper.jar
 |   └── gradle-wrapper.properties
 ├── src/main/java/com/someone/demoapp
-|   ├── cli/RootTask.java
+|   ├── cli
+|   |   ├── RootTask.java
+|   |   └── DisplayVersionTask.java
 |   └── Application.java
 ├── build.gradle
 ├── gradlew
@@ -97,7 +99,7 @@ allprojects {
 }
 
 dependencies {
-    compile 'com.github.serjihsklovski:unicli:0.1.1'
+    compile 'com.github.serjihsklovski:unicli:0.2.0'
 }
 ```
 
@@ -128,12 +130,30 @@ package com.someone.demoapp.cli;
 import com.serjihsklovski.unicli.annotation.Task;
 import com.serjihsklovski.unicli.annotation.Usage;
 
-@Task
+@Task(root = true)
 public class RootTask {
 
     @Usage
     public void printWelcomeMessage() {
         System.out.println("Welcome to Unicli!");
+    }
+
+}
+```
+
+#### `src/main/java/com/someone/demoapp/cli/DisplayVersionTask.java`
+```java
+package com.someone.demoapp.cli;
+
+import com.serjihsklovski.unicli.annotation.Task;
+import com.serjihsklovski.unicli.annotation.Usage;
+
+@Task("version")
+public class DisplayVersionTask {
+
+    @Usage
+    public void displayVersion() {
+        System.out.println("0.1.0");
     }
 
 }
@@ -145,4 +165,10 @@ task's `printWelcome` usage method will be performed.
 $ ./gradlew build
 $ java -jar build/libs/demoapp-0.1.0.jar
 Welcome to Unicli!
+```
+
+But you can also print your application's version:
+```
+$ java -jar build/libs/demoapp-0.1.0.jar version
+0.1.0
 ```

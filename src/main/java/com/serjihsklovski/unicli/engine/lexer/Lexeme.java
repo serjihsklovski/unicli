@@ -67,7 +67,7 @@ public class Lexeme {
 
     private final String value;
 
-    Lexeme(LexemeType type, String value) {
+    public Lexeme(LexemeType type, String value) {
         this.type = type;
         this.value = value;
     }

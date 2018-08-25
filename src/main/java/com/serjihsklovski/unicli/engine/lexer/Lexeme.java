@@ -29,13 +29,13 @@ public class Lexeme {
         TASK_NAME_OR_VALUE,
 
         /**
-         * Represents options. Followed by a task, the options
+         * Represents flags. Followed by a task, the flags
          * are related to this exact task, configuring its
-         * behaviour. Options start with 2 dashes. Examples:
+         * behaviour. Flags start with 2 dashes. Examples:
          * `--verbose`
          * `--sync`
          */
-        OPTION_OR_VALUE,
+        FLAG_OR_VALUE,
 
         /**
          * Represents parameters. Followed by a task, the parameters
@@ -51,10 +51,10 @@ public class Lexeme {
 
         /**
          * Represents shortcuts. Usually, a shortcut is a one-character
-         * synonym for a task option/parameter. Less often, a shortcut
-         * can be self-sufficient, i.e. there may not be a full option or
+         * synonym for a task flag/parameter. Less often, a shortcut
+         * can be self-sufficient, i.e. there may not be a full flag or
          * parameter name at all. Many shortcuts can be joined into one
-         * so-called shortcut list. The shortcut/shortcut list start
+         * so-called shortcut list. The shortcut/shortcut list starts
          * with a dash. Examples:
          * `-o`
          * `-xcf`

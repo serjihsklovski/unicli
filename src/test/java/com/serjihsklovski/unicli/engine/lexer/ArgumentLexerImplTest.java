@@ -24,8 +24,8 @@ public class ArgumentLexerImplTest {
     }
 
     @Test
-    public void getLexemesTestPossibleOption() {
-        getLexemesTestSingleLexeme(Lexeme.LexemeType.OPTION_OR_VALUE, "--version");
+    public void getLexemesTestPossibleFlag() {
+        getLexemesTestSingleLexeme(Lexeme.LexemeType.FLAG_OR_VALUE, "--version");
     }
 
     @Test

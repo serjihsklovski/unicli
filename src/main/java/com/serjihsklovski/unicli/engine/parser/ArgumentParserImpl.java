@@ -73,7 +73,7 @@ public class ArgumentParserImpl implements ArgumentParser {
         lexemeAssumptions.forEach(lexeme -> {
             switch (lexeme.getType()) {
                 case TASK_NAME_OR_VALUE:
-                    switch (state.stateItem) {
+                    switch (state.getStateItem()) {
                         case NONE: {
                             Class taskClass = getTaskClassByNameOrThrow(lexeme.getValue());
                             state.addNewTaskToQueue(new ParameterizedTaskWrapper(taskClass));

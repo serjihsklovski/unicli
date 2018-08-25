@@ -30,7 +30,7 @@ dependencies {
 The main Unicli concepts are:
 * *Task* &#8212; a class that is considered as a function with a set of usage rules;
 * *Usage* &#8212; a method that is considered as a single action that could be performed conforming to some rules
-(given arguments, options, and parameters).
+(given arguments, flags, and parameters).
 
 The task class contains a set of usage methods. To execute a task you need to specify its name as the first JAR
 argument:
@@ -77,11 +77,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 mainClassName = 'com.someone.demoapp.Application'
 
 jar {
-    manifest {
-        attributes(
-                'Main-Class': mainClassName
-        )
-    }
+    manifest.attributes 'Main-Class': mainClassName
 
     from {
         configurations.compile.collect {
@@ -117,7 +113,7 @@ import com.serjihsklovski.unicli.Unicli;
 public class Application {
 
     public static void main(String[] args) {
-        Unicli.run("com.someone.demoapp.cli");
+        Unicli.run("com.someone.demoapp.cli", args);
     }
 
 }

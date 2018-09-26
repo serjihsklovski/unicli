@@ -36,4 +36,26 @@ public interface TaskService {
      */
     Optional<Class> getRootTask();
 
+    /**
+     * Returns the flag name considering the following rules:
+     *
+     * - if the class is annotated with `@Task` annotation, and its `name`
+     *   property is set (not empty), then the `name` property is returned;
+     *
+     * - if the class is annotated with `@Task` annotation, and its `name`
+     *   property is not set (empty), and its `value` property is set (not empty),
+     *   then the `value` property is returned;
+     *
+     * - if the class is annotated with `@Task` annotation, and its properties
+     *   `name` or `value` are both not set (empty), and the `root` property is `true`,
+     *   then the empty `Optional` object is returned.
+     *
+     * - if either the class is not annotated with `@Task` annotation, or all previous
+     *   rules are not met, then the `RuntimeException` is thrown.
+     *
+     * @param clazz a Unicli task class
+     * @return optional task name
+     */
+    Optional<String> getTaskNameByClass(Class clazz);
+
 }

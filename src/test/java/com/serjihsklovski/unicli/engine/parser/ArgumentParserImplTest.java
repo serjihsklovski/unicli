@@ -5,6 +5,7 @@ import com.serjihsklovski.unicli.engine.parser.exception.ArgumentParserException
 import com.serjihsklovski.unicli.engine.parser.test.AnotherDemoTask;
 import com.serjihsklovski.unicli.engine.parser.test.DemoRootTask;
 import com.serjihsklovski.unicli.engine.parser.test.DemoTask;
+import com.serjihsklovski.unicli.service.FlagServiceImpl;
 import com.serjihsklovski.unicli.service.TaskService;
 import com.serjihsklovski.unicli.service.UsageService;
 import com.serjihsklovski.unicli.service.UsageServiceImpl;
@@ -39,7 +40,7 @@ public class ArgumentParserImplTest {
         when(taskService.getTaskByName("demo-task")).thenReturn(Optional.of(DemoTask.class));
         when(taskService.getTaskByName("another-demo-task")).thenReturn(Optional.of(AnotherDemoTask.class));
 
-        UsageService usageService = new UsageServiceImpl();
+        UsageService usageService = new UsageServiceImpl(new FlagServiceImpl());
 
         parser = new ArgumentParserImpl(taskService, usageService);
 

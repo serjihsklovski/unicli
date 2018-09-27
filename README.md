@@ -19,7 +19,7 @@ allprojects {
 }
 
 dependencies {
-    compile 'com.github.serjihsklovski:unicli:0.2.0'
+    compile 'com.github.serjihsklovski:unicli:0.3.0'
 }
 
 // ...
@@ -39,6 +39,65 @@ $ java -jar your-app.jar your-task
 ```
 
 If the task is not specified, Unicli will try to invoke the *root task*.
+
+### Flags
+
+A set of flags might either specify different usages, or be considered as the logical (boolean) parameters to the
+usages. To define the usage flags, use the `@Usage`'s `flags` property, and `@Flag` annotation to assign an array to it.
+
+For example:
+```java
+// [some task class context]
+// ...
+@Usage(flags = {
+        @Flag("red"),
+        @Flag("blue")
+})
+public static void mixRedAndBlueColors() {
+    System.out.println("red + blue = violet");
+}
+// ...
+```
+
+To call this usage method, specify both these flags in the CLI invocation:
+```
+$ java -jar your-app.jar your-task --red --blue
+red + blue = violet
+```
+
+The order of the flags in the CLI is not important.
+
+Also, you can define usage flags as method's `boolean`/`Boolean` parameters:
+
+```java
+// [some task class context]
+// ...
+@Usage
+public static void performSomeAutomatedProcess(
+        @Flag("verbose") boolean verbose,
+        @Flag("send-email-report") boolean sendEmailReport) {
+
+    if (verbose) {
+        // [logging some debug messages]
+    }
+
+    // [some actions]
+
+    if (sendEmailReport) {
+        // [sending an email]
+    }
+}
+// ...
+```
+
+In this case, you can combine both flags as you want. For example, you want to send the email, but not to see the debug
+messages:
+```
+$ java -jar your-app.jar your-task --send-email-report
+```
+
+And this sets the usage method's parameter `verbose` to `false` (as it is not specified in CLI), and parameter
+`sendEmailReport` to `true`.
 
 ### Creating a Unicli Application
 
@@ -95,7 +154,7 @@ allprojects {
 }
 
 dependencies {
-    compile 'com.github.serjihsklovski:unicli:0.2.0'
+    compile 'com.github.serjihsklovski:unicli:0.3.0'
 }
 ```
 
@@ -130,7 +189,7 @@ import com.serjihsklovski.unicli.annotation.Usage;
 public class RootTask {
 
     @Usage
-    public void printWelcomeMessage() {
+    public static void printWelcomeMessage() {
         System.out.println("Welcome to Unicli!");
     }
 
@@ -141,6 +200,7 @@ public class RootTask {
 ```java
 package com.someone.demoapp.cli;
 
+import com.serjihsklovski.unicli.annotation.Flag;
 import com.serjihsklovski.unicli.annotation.Task;
 import com.serjihsklovski.unicli.annotation.Usage;
 
@@ -148,8 +208,12 @@ import com.serjihsklovski.unicli.annotation.Usage;
 public class DisplayVersionTask {
 
     @Usage
-    public void displayVersion() {
-        System.out.println("0.1.0");
+    public static void displayVersion(@Flag("verbose") boolean verbose) {
+        if (verbose) {
+            System.out.println("Demo Application v0.1.0, 2018.09");
+        } else {
+            System.out.println("0.1.0");
+        }
     }
 
 }
@@ -167,4 +231,10 @@ But you can also print your application's version:
 ```
 $ java -jar build/libs/demoapp-0.1.0.jar version
 0.1.0
+```
+
+Or, with the `--verbose` flag specified:
+```
+$ java -jar build/libs/demoapp-0.1.0.jar version --verbose
+Demo Application v0.1.0, 2018.09
 ```

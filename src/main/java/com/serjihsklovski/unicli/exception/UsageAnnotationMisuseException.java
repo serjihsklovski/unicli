@@ -15,10 +15,6 @@ public class UsageAnnotationMisuseException extends RuntimeException {
             return String.format("Usage method `%s` should be defined as public.", method.getName());
         }
 
-        if (ReflectionUtils.isStatic(method)) {
-            return String.format("Usage method `%s` should be defined as non-static.", method.getName());
-        }
-
         if (ReflectionUtils.isAbstract(method)) {
             return String.format("Usage method `%s` should be defined as non-abstract.", method.getName());
         }

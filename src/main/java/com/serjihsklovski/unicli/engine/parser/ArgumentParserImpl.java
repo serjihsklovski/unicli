@@ -5,7 +5,6 @@ import com.serjihsklovski.unicli.engine.parser.exception.ArgumentParserException
 import com.serjihsklovski.unicli.service.TaskService;
 import com.serjihsklovski.unicli.service.UsageService;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,54 +12,9 @@ import java.util.stream.Stream;
 
 public class ArgumentParserImpl implements ArgumentParser {
 
-    private enum StateItem {
+    private final TaskService taskService;
 
-        NONE,
-
-        TASK_INIT,
-
-    }
-
-    private class ArgumentParserState {
-
-        private StateItem stateItem;
-
-        private List<ParameterizedTaskWrapper> taskQueue;
-
-        ArgumentParserState() {
-            stateItem = StateItem.NONE;
-            taskQueue = new ArrayList<>();
-        }
-
-        List<ParameterizedTaskWrapper> getTaskQueue() {
-            return taskQueue;
-        }
-
-        void addNewTaskToQueue(ParameterizedTaskWrapper newTask) {
-            taskQueue.add(newTask);
-        }
-
-        ParameterizedTaskWrapper getLastTask() {
-            return taskQueue.get(taskQueue.size() - 1);
-        }
-
-        ParameterizedTaskWrapper getLastButOneTask() {
-            return taskQueue.get(taskQueue.size() - 2);
-        }
-
-        StateItem getStateItem() {
-            return stateItem;
-        }
-
-        void setStateItem(StateItem stateItem) {
-            this.stateItem = stateItem;
-        }
-
-    }
-
-    private TaskService taskService;
-
-    private UsageService usageService;
+    private final UsageService usageService;
 
     public ArgumentParserImpl(TaskService taskService, UsageService usageService) {
         this.taskService = taskService;
@@ -69,63 +23,44 @@ public class ArgumentParserImpl implements ArgumentParser {
 
     @Override
     public List<ParameterizedTaskWrapper> parseLexemes(Stream<Lexeme> lexemeAssumptions) {
-        ArgumentParserState state = new ArgumentParserState();
-        lexemeAssumptions.forEach(lexeme -> {
-            switch (lexeme.getType()) {
-                case TASK_NAME_OR_VALUE:
-                    switch (state.stateItem) {
-                        case NONE: {
-                            Class taskClass = getTaskClassByNameOrThrow(lexeme.getValue());
-                            state.addNewTaskToQueue(new ParameterizedTaskWrapper(taskClass));
-                            state.setStateItem(StateItem.TASK_INIT);
-                            break;
-                        }
+        List<ParameterizedTaskWrapper> taskQueue = new ArrayList<>();
+        lexemeAssumptions.forEach(lexeme -> parseLexeme(taskQueue, lexeme));
 
-                        case TASK_INIT: {
-                            Class taskClass = getTaskClassByNameOrThrow(lexeme.getValue());
-                            state.addNewTaskToQueue(new ParameterizedTaskWrapper(taskClass));
-
-                            ParameterizedTaskWrapper lastButOneTask = state.getLastButOneTask();
-                            // TODO: find the usage by parameters
-                            Method lastActionUsage = usageService.getAllUsagesByTaskClass(lastButOneTask.getTaskClass())
-                                    .findFirst()
-                                    .orElseThrow(() -> new ArgumentParserException("Cannot find any usages."));
-                            lastButOneTask.setUsage(lastActionUsage);
-
-                            break;
-                        }
-
-                        default:
-                            throw new ArgumentParserException(String.format("No actions supported for this state: " +
-                                    "`lexeme.type` = %s, `state.stateItem` = %s", lexeme.getType(), state.stateItem));
-                    }
-                    break;
-
-                default:
-                    throw new ArgumentParserException(String.format("No actions supported for `%s` lexeme type state.",
-                            lexeme.getType()));
-            }
-        });
-
-        if (state.getTaskQueue().isEmpty()) {
+        if (taskQueue.isEmpty()) {
+            // no lexemes means that the root task will be invoked
             Class rootTask = getRootTaskOrThrow();
-            ParameterizedTaskWrapper singleRootTask = new ParameterizedTaskWrapper(rootTask);
-            // TODO: find the usages without any parameters
-            Method usage = usageService.getAllUsagesByTaskClass(singleRootTask.getTaskClass())
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Cannot find any usages."));
-            singleRootTask.setUsage(usage);
-            state.addNewTaskToQueue(singleRootTask);
-        } else if (state.getStateItem() == StateItem.TASK_INIT) {
-            ParameterizedTaskWrapper lastTask = state.getLastTask();
-            // TODO: find the usage by parameters
-            Method lastActionUsage = usageService.getAllUsagesByTaskClass(lastTask.getTaskClass())
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Cannot find any usages."));
-            lastTask.setUsage(lastActionUsage);
+            ParameterizedTaskWrapper singleRootTask = new ParameterizedTaskWrapper(taskService, usageService, rootTask);
+            taskQueue.add(singleRootTask);
         }
 
-        return state.getTaskQueue();
+        return taskQueue;
+    }
+
+    private void parseLexeme(List<ParameterizedTaskWrapper> taskQueue, Lexeme lexeme) {
+        switch (lexeme.getType()) {
+            case TASK_NAME_OR_VALUE:
+                Class taskClass = getTaskClassByNameOrThrow(lexeme.getValue());
+                taskQueue.add(new ParameterizedTaskWrapper(taskService, usageService, taskClass));
+                break;
+
+            case FLAG_OR_VALUE:
+                parseFlagOrValue(taskQueue, lexeme);
+                break;
+
+            default:
+                throw new ArgumentParserException(String.format("No actions supported for `%s` lexeme type state.",
+                        lexeme.getType()));
+        }
+    }
+
+    private void parseFlagOrValue(List<ParameterizedTaskWrapper> taskQueue, Lexeme lexeme) {
+        if (taskQueue.isEmpty()) {
+            ParameterizedTaskWrapper newRootTask = new ParameterizedTaskWrapper(taskService, usageService, getRootTaskOrThrow());
+            newRootTask.addRawFlag(lexeme.getValue());
+            taskQueue.add(newRootTask);
+        } else {
+            taskQueue.get(taskQueue.size() - 1).addRawFlag(lexeme.getValue());
+        }
     }
 
     private Class getTaskClassByNameOrThrow(String taskName) {

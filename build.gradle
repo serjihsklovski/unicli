@@ -12,7 +12,7 @@ dependencies {
 }
 
 group = 'com.serjihsklovski.unicli'
-version = '0.2.0'
+version = '0.3.0'
 
 description = """
 Unicli is a frontend framework for building CLI applications in Java.
@@ -21,11 +21,7 @@ Unicli is a frontend framework for building CLI applications in Java.
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-jar {
-    manifest {
-        attributes(
-                'Implementation-Title': project.name,
-                'Implementation-Version': project.version
-        )
-    }
-}
+jar.manifest.attributes(
+        'Implementation-Title': project.name,
+        'Implementation-Version': project.version
+)

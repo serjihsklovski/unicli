@@ -48,6 +48,27 @@ public class TaskServiceImpl implements TaskService {
                 .findFirst();
     }
 
+    @Override
+    public Optional<String> getTaskNameByClass(Class clazz) {
+        if (!clazz.isAnnotationPresent(Task.class)) {
+            throw new RuntimeException(String.format(
+                    "Class `%s` is not the Unicli task class (it is not annotated with `%s` annotation).",
+                    clazz.getCanonicalName(), Task.class.getCanonicalName()));
+        }
+
+        Task task = (Task) clazz.getAnnotation(Task.class);
+        if (!task.name().isEmpty()) {
+            return Optional.of(task.name());
+        } else if (!task.value().isEmpty()) {
+            return Optional.of(task.value());
+        } else if (task.root()) {
+            return Optional.empty();
+        }
+
+        throw new RuntimeException(String.format("Unicli task class `%s` has no name declared.",
+                clazz.getCanonicalName()));
+    }
+
     private boolean isPublicClass(Class clazz) {
         return !clazz.isEnum()
                 && clazz.toString().startsWith("class")

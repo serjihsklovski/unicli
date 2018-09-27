@@ -32,8 +32,8 @@ public class UsageServiceImpl implements UsageService {
         return Stream.of(taskClass.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(Usage.class))
                 .peek(method -> {
-                    if (!ReflectionUtils.isPublic(method) || ReflectionUtils.isStatic(method)
-                            || ReflectionUtils.isAbstract(method) || !ReflectionUtils.returnsVoid(method)) {
+                    if (!ReflectionUtils.isPublic(method) || ReflectionUtils.isAbstract(method) ||
+                            !ReflectionUtils.returnsVoid(method)) {
                         // TODO: enable abstract Usage methods in interfaces
                         throw new UsageAnnotationMisuseException(method);
                     }

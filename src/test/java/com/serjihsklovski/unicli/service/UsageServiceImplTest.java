@@ -7,7 +7,6 @@ import com.serjihsklovski.unicli.service.test.usage.FindUsageByFlagsTask;
 import com.serjihsklovski.unicli.service.test.usage.FindUsageByParamsTask;
 import com.serjihsklovski.unicli.service.test.usage.NonPublicUsageMethod;
 import com.serjihsklovski.unicli.service.test.usage.NonTaskClass;
-import com.serjihsklovski.unicli.service.test.usage.StaticUsageMethod;
 import com.serjihsklovski.unicli.service.test.usage.UsageMethod;
 import com.serjihsklovski.unicli.service.test.usage.UsageMethodReturnsNonVoid;
 import com.serjihsklovski.unicli.service.test.usage.UsageMethodTakesParams;
@@ -76,11 +75,6 @@ public class UsageServiceImplTest {
     @Test(expected = UsageAnnotationMisuseException.class)
     public void getAllUsagesByTaskClass_expectUsageAnnotationMisuseException_asNonPublicUsageMethod() {
         usageService.getAllUsagesByTaskClass(NonPublicUsageMethod.class).forEach(method -> { /* no actions */ });
-    }
-
-    @Test(expected = UsageAnnotationMisuseException.class)
-    public void getAllUsagesByTaskClass_expectUsageAnnotationMisuseException_asStaticUsageMethod() {
-        usageService.getAllUsagesByTaskClass(StaticUsageMethod.class).forEach(method -> { /* no actions */ });
     }
 
     @Test(expected = UsageAnnotationMisuseException.class)

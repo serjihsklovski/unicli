@@ -2,7 +2,6 @@ package com.serjihsklovski.unicli.service;
 
 import com.serjihsklovski.unicli.annotation.Flag;
 import com.serjihsklovski.unicli.annotation.Usage;
-import com.serjihsklovski.unicli.util.CaseUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -23,23 +22,24 @@ public class FlagServiceImpl implements FlagService {
     }
 
     @Override
+    public String getFlagName(Flag flag) {
+        if (!flag.name().isEmpty()) {
+            return flag.name();
+        } else if (!flag.value().isEmpty()) {
+            return flag.value();
+        }
+        throw new RuntimeException("Flag's name is not set.");
+    }
+
+    @Override
     public String getFlagNameOfParameter(Parameter flagParameter) {
         if (flagParameter.isAnnotationPresent(Flag.class)) {
-            Flag flag = flagParameter.getAnnotation(Flag.class);
-            if (!flag.name().isEmpty()) {
-                return flag.name();
-            } else if (!flag.value().isEmpty()) {
-                return flag.value();
-            }
+            return getFlagName(flagParameter.getAnnotation(Flag.class));
         }
-
-        if (flagParameter.isNamePresent()) {
-            return CaseUtils.convertCamelCaseToHyphenedLowercase(flagParameter.getName());
-        }
-
-        throw new RuntimeException("The Java compiler do not save real names of method parameters in the byte code " +
-                "by default. If you want the Java compiler to save the real names of the parameters, please add the " +
-                "`-parameters` flag calling `javac`.");
+        throw new RuntimeException(String.format(
+                "The `%s` instance is not annotated with the `%s` annotation. Method: `%s`.",
+                Parameter.class.getCanonicalName(), Flag.class.getCanonicalName(),
+                flagParameter.getDeclaringExecutable()));
     }
 
 }
